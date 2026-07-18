@@ -81,8 +81,16 @@ def export_with_images(month_str):
 
 st.divider()
 # 日期选择
-selected_date = st.date_input("选择要导出的日期")
-date_str = selected_date.strftime("%Y-%m")
+# 年份和月份分开选
+years = ["2026", "2027", "2028", "2029"]
+months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
+col1, col2 = st.columns(2)
+with col1:
+    year = st.selectbox("年份", years)
+with col2:
+    month = st.selectbox("月份", months)
+selected_month = f"{year}-{month}"
+
 if st.button("导出带图记录"):
     if selected_month:
         with st.spinner("正在生成，请稍候..."):
