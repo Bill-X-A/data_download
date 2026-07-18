@@ -82,7 +82,7 @@ def export_with_images(date_str):
 st.divider()
 # 日期选择
 selected_date = st.date_input("选择要导出的日期")
-date_str = selected_date.strftime("%Y-%m-%d")
+date_str = selected_date.strftime("%Y-%m")
 if st.button("导出带图记录"):
     with st.spinner("正在生成，请稍候..."):
         excel_data = export_with_images(data_str)
