@@ -9,6 +9,27 @@ import streamlit as st
 APP_ID = st.secrets["FEISHU_APP_ID"]
 APP_SECRET = st.secrets["FEISHU_APP_SECRET"]
 
+def get_from_feishu():
+    client = lark.Client.builder() \
+        .app_id(APP_ID) \
+        .app_secret(APP_SECRET) \
+        .build()
+
+    request = ListAppTableRecordRequest.builder() \
+        .app_token(APP_TOKEN) \
+        .table_id(TABLE_ID) \
+        .build()
+
+    response = client.bitable.v1.app_table_record.list(request)
+    
+    if response.success():
+        records = []
+        for item in response.data.items:
+            records.append(item.fields)
+        return records
+    else:
+        return []
+
 def export_with_images():
     from openpyxl import Workbook
     from openpyxl.drawing.image import Image as XLImage
