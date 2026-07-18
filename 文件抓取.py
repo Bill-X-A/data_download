@@ -4,6 +4,7 @@ from lark_oapi.api.bitable.v1 import *
 import openpyxl
 from openpyxl.drawing.image import Image as XLImage
 import io
+import streamlit as st
 
 def export_with_images():
     from openpyxl import Workbook
