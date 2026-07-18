@@ -8,6 +8,8 @@ import streamlit as st
 
 APP_ID = st.secrets["FEISHU_APP_ID"]
 APP_SECRET = st.secrets["FEISHU_APP_SECRET"]
+APP_TOKEN = "AO2NbKrqNaWFZ9suHKJcjGYLn4b"
+TABLE_ID = "tbl1W59w24xZBvNc"
 
 def get_from_feishu():
     client = lark.Client.builder() \
