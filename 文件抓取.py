@@ -5,6 +5,7 @@ import openpyxl
 from openpyxl.drawing.image import Image as XLImage
 import io
 import streamlit as st
+from datetime import datetime, timezone, timedelta
 
 APP_ID = st.secrets["FEISHU_APP_ID"]
 APP_SECRET = st.secrets["FEISHU_APP_SECRET"]
@@ -32,7 +33,7 @@ def get_from_feishu():
     else:
         return []
 
-def export_with_images():
+def export_with_images(date_str):
     from openpyxl import Workbook
     from openpyxl.drawing.image import Image as XLImage
     
@@ -42,6 +43,8 @@ def export_with_images():
     ).json()["tenant_access_token"]
     
     records = get_from_feishu()
+    # 筛选出选定日期的记录
+    records = [r for r in records if str(r.get("时间", "")).startswith(date_str)]
     
     wb = Workbook()
     ws = wb.active
@@ -77,9 +80,12 @@ def export_with_images():
     return buffer.getvalue()
 
 st.divider()
+# 日期选择
+selected_date = st.date_input("选择要导出的日期")
+date_str = selected_date.strftime("%Y-%m-%d")
 if st.button("导出带图记录"):
     with st.spinner("正在生成，请稍候..."):
-        excel_data = export_with_images()
+        excel_data = export_with_images(data_str)
     st.download_button(
         label="📥 下载Excel",
         data=excel_data,
