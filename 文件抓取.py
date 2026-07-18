@@ -33,7 +33,7 @@ def get_from_feishu():
     else:
         return []
 
-def export_with_images(date_str):
+def export_with_images(month_str):
     from openpyxl import Workbook
     from openpyxl.drawing.image import Image as XLImage
     
@@ -44,7 +44,7 @@ def export_with_images(date_str):
     
     records = get_from_feishu()
     # 筛选出选定日期的记录
-    records = [r for r in records if str(r.get("时间", "")).startswith(date_str)]
+    records = [r for r in records if str(r.get("时间", "")).startswith(month_str)]
     
     wb = Workbook()
     ws = wb.active
@@ -84,11 +84,14 @@ st.divider()
 selected_date = st.date_input("选择要导出的日期")
 date_str = selected_date.strftime("%Y-%m")
 if st.button("导出带图记录"):
-    with st.spinner("正在生成，请稍候..."):
-        excel_data = export_with_images(data_str)
-    st.download_button(
-        label="📥 下载Excel",
-        data=excel_data,
-        file_name="销售记录带图.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+    if selected_month:
+        with st.spinner("正在生成，请稍候..."):
+            excel_data = export_with_images(selected_month)
+        st.download_button(
+            label="📥 下载Excel",
+            data=excel_data,
+            file_name="销售记录带图.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+    else:
+        st.warning("请先输入月份")
