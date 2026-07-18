@@ -6,6 +6,11 @@ from openpyxl.drawing.image import Image as XLImage
 import io
 import streamlit as st
 
+APP_ID = "你的AppID"
+APP_SECRET = "你的AppSecret"
+APP_TOKEN = "AO2NbKrqNaWFZ9suHKJcjGYLn4b"
+TABLE_ID = "tbl1W59w24xZBvNc"
+
 def export_with_images():
     from openpyxl import Workbook
     from openpyxl.drawing.image import Image as XLImage
