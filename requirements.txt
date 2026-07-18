@@ -1,0 +1,4 @@
+streamlit
+lark-oapi
+requests
+openpyxl
