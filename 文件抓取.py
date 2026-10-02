@@ -12,7 +12,7 @@ APP_SECRET = st.secrets["FEISHU_APP_SECRET"]
 APP_TOKEN = "AO2NbKrqNaWFZ9suHKJcjGYLn4b"
 TABLE_ID = "tbl1W59w24xZBvNc"
 
-def get_from_feishu():
+def get_from_feishu(month_str):
     client = lark.Client.builder() \
         .app_id(APP_ID) \
         .app_secret(APP_SECRET) \
@@ -21,6 +21,8 @@ def get_from_feishu():
     request = ListAppTableRecordRequest.builder() \
         .app_token(APP_TOKEN) \
         .table_id(TABLE_ID) \
+        .filter(f'CurrentValue.[时间].contains("{month_str}")') \
+        .page_size(500) \
         .build()
 
     response = client.bitable.v1.app_table_record.list(request)
@@ -44,9 +46,6 @@ def export_with_images(month_str):
     
     records = get_from_feishu()
     st.write(f"从飞书读到 {len(records)} 条记录")
-
-    # 筛选出选定日期的记录
-    records = [r for r in records if str(r.get("时间", "")).startswith(month_str)]
     
     wb = Workbook()
     ws = wb.active
