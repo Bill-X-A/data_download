@@ -48,7 +48,7 @@ def export_with_images(month_str):
     
     wb = Workbook()
     ws = wb.active
-    ws.append(["销售员", "手机号", "商品名称", "SN码", "订单金额", "购买品类", "购买用途", "会员等级", "时间", "三码合一照片"])
+    ws.append(["订单时间","销售员", "手机号", "商品名称", "SN码", "订单金额", "购买品类", "购买用途", "会员等级", "时间", "三码合一照片"])
     
     row = 2
     for fields in records:
@@ -61,6 +61,7 @@ def export_with_images(month_str):
         ws.cell(row=row, column=7, value=str(fields.get("购买用途", "")))
         ws.cell(row=row, column=8, value=str(fields.get("会员等级", "")))
         ws.cell(row=row, column=9, value=str(fields.get("时间", "")))
+        ws.cell(row=row, column=10, value=str(fields.get("订单时间", "")))
         
         photo = fields.get("三码合一照片")
         if photo and isinstance(photo, list):
