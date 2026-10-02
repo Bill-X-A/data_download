@@ -43,6 +43,8 @@ def export_with_images(month_str):
     ).json()["tenant_access_token"]
     
     records = get_from_feishu()
+    st.write(f"从飞书读到 {len(records)} 条记录")
+
     # 筛选出选定日期的记录
     records = [r for r in records if str(r.get("时间", "")).startswith(month_str)]
     
