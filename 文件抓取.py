@@ -44,7 +44,7 @@ def export_with_images(month_str):
         json={"app_id": APP_ID, "app_secret": APP_SECRET}
     ).json()["tenant_access_token"]
     
-    records = get_from_feishu()
+    records = get_from_feishu(month_str)
     st.write(f"从飞书读到 {len(records)} 条记录")
     
     wb = Workbook()
