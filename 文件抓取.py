@@ -48,7 +48,7 @@ def export_with_images(month_str):
     
     wb = Workbook()
     ws = wb.active
-    ws.append(["订单时间","销售员", "手机号", "商品名称", "SN码", "订单金额", "购买品类", "购买用途", "会员等级", "时间", "三码合一照片"])
+    ws.append(["订单时间", "销售员", "手机号", "商品名称", "SN码", "订单金额", "购买品类", "购买用途", "会员等级", "时间", "三码合一照片"])
     
     row = 2
     for fields in records:
