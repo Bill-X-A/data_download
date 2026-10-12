@@ -6,6 +6,7 @@ from openpyxl.drawing.image import Image as XLImage
 import io
 import streamlit as st
 from datetime import datetime, timezone, timedelta
+from PIL import Image as PILImage
 
 APP_ID = st.secrets["FEISHU_APP_ID"]
 APP_SECRET = st.secrets["FEISHU_APP_SECRET"]
@@ -85,7 +86,17 @@ def export_with_images(month_str, category):
             if file_token:
                 url = f"https://open.feishu.cn/open-apis/drive/v1/medias/{file_token}/download"
                 img_data = requests.get(url, headers={"Authorization": f"Bearer {token}"}).content
-                img = XLImage(io.BytesIO(img_data))
+
+                # 压缩图片
+                pil_img = PILImage.open(io.BytesIO(img_data))
+                pil_img = pil_img.convert("RGB")          # 统一格式，防止PNG透明通道报错
+                pil_img.thumbnail((400, 400))             # 最长边缩到400像素，保持比例
+                compressed = io.BytesIO()
+                pil_img.save(compressed, format="JPEG", quality=70)  # 画质70%
+                compressed.seek(0)                        # 把"读取指针"移回开头
+
+                img = XLImage(compressed)
+
                 img.width = 100
                 img.height = 100
                 ws.row_dimensions[row].height = 80
