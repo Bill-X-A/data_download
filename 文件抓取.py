@@ -18,22 +18,33 @@ def get_from_feishu(month_str):
         .app_secret(APP_SECRET) \
         .build()
 
-    request = ListAppTableRecordRequest.builder() \
-        .app_token(APP_TOKEN) \
-        .table_id(TABLE_ID) \
-        .filter(f'CurrentValue.[时间].contains("{month_str}")') \
-        .page_size(500) \
-        .build()
+    records = []
+    page_token = None
 
-    response = client.bitable.v1.app_table_record.list(request)
-    
-    if response.success():
-        records = []
+    while True:
+        builder = ListAppTableRecordRequest.builder() \
+            .app_token(APP_TOKEN) \
+            .table_id(TABLE_ID) \
+            .filter(f'CurrentValue.[时间].contains("{month_str}")') \
+            .page_size(500)
+        
+        if page_token:
+            builder = builder.page_token(page_token)
+        
+        response = client.bitable.v1.app_table_record.list(builder.build())
+        
+        if not response.success():
+            break
+        
         for item in response.data.items:
             records.append(item.fields)
-        return records
-    else:
-        return []
+        
+        if response.data.has_more:
+            page_token = response.data.page_token
+        else:
+            break
+
+    return records
 
 def export_with_images(month_str):
     from openpyxl import Workbook
