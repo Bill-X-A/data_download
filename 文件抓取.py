@@ -12,11 +12,17 @@ APP_SECRET = st.secrets["FEISHU_APP_SECRET"]
 APP_TOKEN = "AO2NbKrqNaWFZ9suHKJcjGYLn4b"
 TABLE_ID = "tbl1W59w24xZBvNc"
 
-def get_from_feishu(month_str):
+def get_from_feishu(month_str, category):
     client = lark.Client.builder() \
         .app_id(APP_ID) \
         .app_secret(APP_SECRET) \
         .build()
+
+    # 根据是否选了"全部"，决定filter内容
+    if category == "全部":
+        filter_str = f'CurrentValue.[时间].contains("{month_str}")'
+    else:
+        filter_str = f'AND(CurrentValue.[时间].contains("{month_str}"), CurrentValue.[购买品类]="{category}")'
 
     records = []
     page_token = None
@@ -25,14 +31,13 @@ def get_from_feishu(month_str):
         builder = ListAppTableRecordRequest.builder() \
             .app_token(APP_TOKEN) \
             .table_id(TABLE_ID) \
-            .filter(f'CurrentValue.[时间].contains("{month_str}")') \
+            .filter(filter_str) \
             .page_size(500)
         
         if page_token:
             builder = builder.page_token(page_token)
         
         response = client.bitable.v1.app_table_record.list(builder.build())
-        
         if not response.success():
             break
         
@@ -46,7 +51,7 @@ def get_from_feishu(month_str):
 
     return records
 
-def export_with_images(month_str):
+def export_with_images(month_str, category):
     from openpyxl import Workbook
     from openpyxl.drawing.image import Image as XLImage
     
@@ -55,7 +60,7 @@ def export_with_images(month_str):
         json={"app_id": APP_ID, "app_secret": APP_SECRET}
     ).json()["tenant_access_token"]
     
-    records = get_from_feishu(month_str)
+    records = get_from_feishu(month_str, category)
     st.write(f"从飞书读到 {len(records)} 条记录")
     
     wb = Workbook()
@@ -103,13 +108,13 @@ with col2:
     month = st.selectbox("月份", months)
 selected_month = f"{year}-{month}"
 
-type_options = ["手机", "PC", "平板", "智慧屏", "穿戴","音频", "配件"]
-type = st.selectbox("购买种类", type_options)
+categories = ["手机", "PC", "平板", "智慧屏", "穿戴","音频", "配件"]
+category = st.selectbox("购买种类", type_options)
 
 if st.button("导出带图记录"):
     if selected_month:
         with st.spinner("正在生成，请稍候..."):
-            excel_data = export_with_images[(selected_month), (type)]
+            excel_data = export_with_images(selected_month, category)
         st.download_button(
             label="📥 下载Excel",
             data=excel_data,
