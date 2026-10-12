@@ -90,7 +90,7 @@ def export_with_images(month_str, category):
                 # 压缩图片
                 pil_img = PILImage.open(io.BytesIO(img_data))
                 pil_img = pil_img.convert("RGB")          # 统一格式，防止PNG透明通道报错
-                pil_img.thumbnail((800, 800))             # 最长边缩到400像素，保持比例
+                pil_img.thumbnail((1600, 1600))             # 最长边缩到400像素，保持比例
                 compressed = io.BytesIO()
                 pil_img.save(compressed, format="JPEG", quality=70)  # 画质70%
                 compressed.seek(0)                        # 把"读取指针"移回开头
