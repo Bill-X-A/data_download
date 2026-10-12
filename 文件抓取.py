@@ -103,6 +103,9 @@ with col2:
     month = st.selectbox("月份", months)
 selected_month = f"{year}-{month}"
 
+type_options = ["手机", "PC", "平板", "智慧屏", "穿戴","音频", "配件"]
+type = st.selectbox("购买种类", type_options)
+
 if st.button("导出带图记录"):
     if selected_month:
         with st.spinner("正在生成，请稍候..."):
@@ -114,4 +117,4 @@ if st.button("导出带图记录"):
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
     else:
-        st.warning("请先输入月份")
+        st.warning("请先输入")
