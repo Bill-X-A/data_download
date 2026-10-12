@@ -109,7 +109,8 @@ type = st.selectbox("购买种类", type_options)
 if st.button("导出带图记录"):
     if selected_month:
         with st.spinner("正在生成，请稍候..."):
-            excel_data = export_with_images(selected_month, type)
+            excel_data = export_with_images(selected_month)
+            excel_data = export_with_images(type)
         st.download_button(
             label="📥 下载Excel",
             data=excel_data,
