@@ -109,7 +109,7 @@ with col2:
 selected_month = f"{year}-{month}"
 
 categories = ["手机", "PC", "平板", "智慧屏", "穿戴","音频", "配件"]
-category = st.selectbox("购买种类", type_options)
+category = st.selectbox("购买种类", categories)
 
 if st.button("导出带图记录"):
     if selected_month:
